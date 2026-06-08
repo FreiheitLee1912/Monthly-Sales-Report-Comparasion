@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+!legacy/compare_core.pyc
 .pytest_cache/
 generated_reports/
 .venv/

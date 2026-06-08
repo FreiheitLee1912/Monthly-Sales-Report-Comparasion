@@ -104,6 +104,39 @@
       gap: 16px;
     }
 
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 750;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .added strong { color: #1f845a; }
+    .removed strong { color: #c9372c; }
+    .duplication strong { color: #1f845a; }
+    .changed strong { color: #0c66e4; }
+    .fields strong { color: #946f00; }
+
     .download-card {
       min-height: 132px;
       display: grid;
@@ -171,6 +204,10 @@
       .download-grid {
         grid-template-columns: 1fr;
       }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -188,6 +225,36 @@
       </section>
 
       <section class="section">
+        <div class="stats">
+          <div class="stat added">
+            <strong>{{ result.added }}</strong>
+            <span>追加 record</span>
+          </div>
+          <div class="stat removed">
+            <strong>{{ result.removed }}</strong>
+            <span>削除 record</span>
+          </div>
+          <div class="stat duplication">
+            <strong>{{ result.duplication_add }}</strong>
+            <span>Duplication in Add</span>
+          </div>
+          <div class="stat duplication">
+            <strong>{{ result.duplication_remove }}</strong>
+            <span>Duplication in Removed</span>
+          </div>
+          <div class="stat duplication">
+            <strong>{{ result.duplication }}</strong>
+            <span>Duplication Total</span>
+          </div>
+          <div class="stat changed">
+            <strong>{{ result.changed_rows }}</strong>
+            <span>変更 record</span>
+          </div>
+          <div class="stat fields">
+            <strong>{{ result.changed_fields }}</strong>
+            <span>変更項目</span>
+          </div>
+        </div>
         <div class="download-grid">
           <div class="download-card">
             <strong>report.xlsx</strong>

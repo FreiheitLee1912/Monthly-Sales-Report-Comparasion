@@ -15,7 +15,7 @@ from src.reports import (
 
 
 app = Flask(__name__)
-app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = 80 * 1024 * 1024
 REPORT_ROOT = Path(os.environ.get("REPORT_ROOT", "generated_reports"))
 
 
@@ -66,8 +66,10 @@ def _save_upload(field_name: str, upload_dir: Path) -> Path:
     if uploaded is None or uploaded.filename == "":
         raise ValueError(f"Missing required file: {field_name}")
     filename = secure_filename(uploaded.filename)
-    if not filename.lower().endswith((".xlsx", ".xls")):
-        raise ValueError("Only Excel files are supported.")
+    if filename.startswith("~$"):
+        raise ValueError("Temporary Excel files starting with ~$ are not supported.")
+    if not filename.lower().endswith(".xlsx"):
+        raise ValueError("Only .xlsx files are supported.")
     path = upload_dir / filename
     uploaded.save(path)
     return path

@@ -20,6 +20,7 @@
       --del-soft: #ffeceb;
       --chg: #0c66e4;
       --chg-soft: #e9f2ff;
+      --dup: #1f845a;
       --warn: #946f00;
     }
 
@@ -135,25 +136,10 @@
       line-height: 1.5;
     }
 
-    .report-select {
-      width: min(420px, 100%);
-      min-height: 42px;
-      padding: 8px 10px;
-      border: 1px solid var(--line);
-      border-radius: 3px;
-      background: #fff;
-      color: var(--text);
-      font-family: inherit;
-    }
-
     .upload-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
-    }
-
-    .upload-grid.single {
-      grid-template-columns: minmax(0, 1fr);
     }
 
     .upload-card {
@@ -280,8 +266,6 @@
     .pill.del { background: var(--del-soft); color: var(--del); }
     .pill.chg { background: var(--chg-soft); color: var(--chg); }
 
-    [hidden] { display: none !important; }
-
     @media (max-width: 820px) {
       main { width: min(100vw - 24px, 720px); }
 
@@ -292,7 +276,6 @@
       }
 
       .upload-grid,
-      .upload-grid.single,
       .info-grid {
         grid-template-columns: 1fr;
       }
@@ -313,10 +296,10 @@
         <div class="product-row">
           <div class="logo-mark">S</div>
           <strong>SalesPlan Compare</strong>
-          <span class="badge">ONLINE</span>
+          <span class="badge">v1.6</span>
         </div>
-        <h1>月次販売計画とExcelレポートをオンラインで生成</h1>
-        <p class="lead">Excelファイルをアップロードし、比較レポート、サマリーレポート、学生Ganttレポートを作成します。結果はExcel、HTML、PDFとしてダウンロードできます。</p>
+        <h1>月次販売計画の変更点を確認</h1>
+        <p class="lead">前月版と当月版の「月次販売計画」ファイルを比較し、追加・削除・変更されたレコードを確認できます。列の値をキーに同じレコードを照合し、変更箇所を色分けしたExcelファイルとサマリーシートを作成します。</p>
       </section>
 
       {% if error %}
@@ -326,44 +309,28 @@
       <section class="section">
         <div class="section-title">
           <div>
-            <h2>レポート種類を選択</h2>
-            <p>作成したいレポートを選び、必要なExcelファイルを指定してください。</p>
+            <h2>ファイルを選択</h2>
+            <p>前月版と当月版のExcelファイルを指定してください。</p>
           </div>
         </div>
 
         <form action="/report" method="post" enctype="multipart/form-data" id="compare-form">
-          <label>
-            <select class="report-select" name="report_type" id="report-type">
-              <option value="summary">Excel Summary</option>
-              <option value="compare">Monthly Compare</option>
-              <option value="student_gantt">Student Gantt</option>
-            </select>
-          </label>
-
-          <div class="upload-grid single" id="single-upload">
-            <label class="upload-card">
-              <strong>Excel file</strong>
-              <small>Excel Summary または Student Gantt に使用するファイルを選択してください。</small>
-              <input class="file-input" type="file" name="excel_file" accept=".xlsx,.xls">
-            </label>
-          </div>
-
-          <div class="upload-grid" id="compare-upload" hidden>
+          <input type="hidden" name="report_type" value="compare">
+          <div class="upload-grid">
             <label class="upload-card">
               <strong>Old file（前月の月次販売計画）</strong>
               <small>比較元となる、前月版の月次販売計画ファイルを選択してください。</small>
-              <input class="file-input" type="file" name="old_file" accept=".xlsx,.xls">
+              <input class="file-input" type="file" name="old_file" accept=".xlsx,.xls" required>
             </label>
             <label class="upload-card">
               <strong>New file（当月の月次販売計画）</strong>
               <small>当月版の月次販売計画ファイルを選択してください。</small>
-              <input class="file-input" type="file" name="new_file" accept=".xlsx,.xls">
+              <input class="file-input" type="file" name="new_file" accept=".xlsx,.xls" required>
             </label>
           </div>
-
           <div class="actions">
-            <button class="btn-primary" type="submit" id="compare-button">レポートを生成</button>
-            <span class="hint" id="report-hint">Excelのシート構成、行数、列数、空白セル数を集計します。</span>
+            <button class="btn-primary" type="submit" id="compare-button">比較を実行</button>
+            <span class="hint">D列をキーに、追加・削除・変更を確認します。</span>
           </div>
         </form>
       </section>
@@ -371,24 +338,25 @@
       <section class="section">
         <div class="info-grid">
           <div class="info-card">
-            <h3>Excel Summary</h3>
-            <p>アップロードされたExcelブックを読み込み、シートごとの行数、列数、空白セル、数値列をまとめます。</p>
+            <h3>ツール概要</h3>
+            <p>月次の販売計画を更新したあと、前月からどこが変わったかを確認するためのツールです。確認結果は、色付きの比較ファイルとサマリーにまとめます。</p>
           </div>
           <div class="info-card">
-            <h3>Monthly Compare</h3>
-            <p>前月ファイルと当月ファイルを比較し、追加・削除・変更された行を確認します。</p>
+            <h3>確認内容</h3>
+            <p>D列の値をキーに照合し、以下の変化点を確認します。</p>
             <ul>
               <li><span class="pill add">追加</span> 当月版で新しく追加されたレコード</li>
-              <li><span class="pill del">削除</span> 前月版にあり、当月版にはないレコード</li>
-              <li><span class="pill chg">変更</span> 内容が更新されたレコード</li>
+              <li><span class="pill del">削除</span> 前月版にはあり、当月版では削除されたレコード</li>
+              <li><span class="pill chg">変更</span> 内容が更新されたレコードと項目</li>
             </ul>
           </div>
           <div class="info-card">
-            <h3>Student Gantt</h3>
-            <p>学生、任務、開始日、終了日、進度をもとにGanttレポートを生成します。</p>
+            <h3>出力内容</h3>
+            <p>比較が終わると、次の内容を含むファイルを作成します。</p>
             <ul>
-              <li>対応列: Student / Task / Start / End / Progress</li>
-              <li>中国語列: 学生 / 任務 / 開始日 / 終了日 / 進度</li>
+              <li>変更箇所を色分けした比較シート</li>
+              <li>件数と変更内容をまとめたサマリーシート</li>
+              <li>オンライン版ではExcel、HTML、PDFをダウンロードできます</li>
             </ul>
           </div>
         </div>
@@ -399,30 +367,11 @@
   <script>
     const form = document.getElementById("compare-form");
     const button = document.getElementById("compare-button");
-    const reportType = document.getElementById("report-type");
-    const singleUpload = document.getElementById("single-upload");
-    const compareUpload = document.getElementById("compare-upload");
-    const hint = document.getElementById("report-hint");
 
-    const hints = {
-      summary: "Excelのシート構成、行数、列数、空白セル数を集計します。",
-      compare: "前月版と当月版を比較し、追加・削除・変更を確認します。",
-      student_gantt: "学生、任務、開始日、終了日、進度からGanttレポートを生成します。"
-    };
-
-    function syncUploadMode() {
-      const isCompare = reportType.value === "compare";
-      singleUpload.hidden = isCompare;
-      compareUpload.hidden = !isCompare;
-      hint.textContent = hints[reportType.value];
-    }
-
-    reportType.addEventListener("change", syncUploadMode);
     form.addEventListener("submit", () => {
-      button.textContent = "生成中...";
+      button.textContent = "比較中...";
       button.disabled = true;
     });
-    syncUploadMode();
   </script>
 </body>
 </html>

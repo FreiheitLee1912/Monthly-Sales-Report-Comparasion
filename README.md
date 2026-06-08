@@ -1,37 +1,50 @@
-# Excel Report Generator
+# SalesPlan Compare
 
-This repository now contains two versions:
+This repository contains:
 
 - `MonthlySalesPlanCompareExe.exe` with `_internal/`: the original Windows desktop package.
-- `app.py` with `src/` and `templates/`: the online Python web app.
+- `app.py` with `src/` and `templates/`: the online Python web app version.
 
 ## Online Web App
 
-The web app lets users upload Excel files, choose a report type, and download generated reports as:
+The online app restores the original SalesPlan Compare flow:
 
-- `report.xlsx`
-- `report.html`
-- `report.pdf`
+1. Upload `Old file` for the previous month's monthly sales plan.
+2. Upload `New file` for the current month's monthly sales plan.
+3. Run comparison.
+4. Review counts on the result screen.
+5. Download the generated Excel, HTML, or PDF report.
 
-## Report Types
+## Compare Logic
 
-### Excel Summary
+- Header row: row 1
+- Data starts from: row 2
+- Matching key: Column D
+- Rows without a Column D value are ignored.
+- Added records are highlighted in yellow on `new data`.
+- Removed records are highlighted in gray on `old data`.
+- Changed values are highlighted in orange on `new data`.
+- New columns in the current month file are highlighted in green.
 
-Upload one workbook. The app reports sheet names, row counts, column counts, empty cell counts, and numeric column counts.
+The generated workbook contains:
 
-### Monthly Compare
+- `Summary`
+- `new data`
+- `old data`
 
-Upload a previous-month workbook and a current-month workbook. The app reports added rows, removed rows, and changed rows by comparing whole row values.
+The following fields are excluded from value comparison and shaded gray:
 
-### Student Gantt
-
-Upload one workbook with schedule columns. Supported column names include:
-
-- English: `Student`, `Task`, `Start`, `End`, `Progress`
-- Chinese: `學生`, `任務`, `開始日`, `結束日`, `進度`
-- Japanese: `学生`, `課題`, `開始日`, `終了日`, `完成率`
-
-The app generates an XLSX schedule, an HTML Gantt view, and a PDF summary.
+- `BPCS_CUSTOMER_CODE`
+- `BPCS_SHIPTO_CODE`
+- `CUSTOMER_PN`
+- `BUSINESS_CATEGORY_NAME`
+- `TRANSACTION_CURRENCY`
+- `Ex_Rate_JPY`
+- `GENERAL_CODE_1`
+- `GENERAL_CODE_2`
+- `GENERAL_CODE_3`
+- `GENERAL_CODE_4`
+- `GENERAL_CODE_5`
 
 ## Run Locally
 
@@ -54,7 +67,9 @@ http://localhost:5000/
 4. If entering settings manually:
    - Build command: `pip install -r requirements.txt`
    - Start command: `gunicorn app:app`
-   - Python version: `3.11.9`
+   - Python version: `3.14.3`
+
+The online app loads the original `compare_core` bytecode extracted from the packaged executable, so Python 3.14 is required.
 
 GitHub Pages cannot run this app because it needs a Python backend for Excel processing.
 
