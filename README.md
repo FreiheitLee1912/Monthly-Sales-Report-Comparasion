@@ -1,9 +1,11 @@
 # SalesPlan Compare
 
-This repository contains:
+This repository contains two aligned versions:
 
-- `MonthlySalesPlanCompareExe.exe` with `_internal/`: the original Windows desktop package.
-- `app.py` with `src/` and `templates/`: the online Python web app version.
+- EXE package: `releases/exe/MonthlySalesPlanCompareExe.zip`
+- Online web app: `app.py` with `src/`, `templates/`, `requirements.txt`, and `render.yaml`
+
+See `VERSION.md` for the repository layout and consistency rule.
 
 ## Online Web App
 
@@ -70,6 +72,20 @@ http://localhost:5000/
    - Python version: `3.14.3`
 
 The online app loads the original `compare_core` bytecode extracted from the packaged executable, so Python 3.14 is required.
+
+## EXE Download
+
+Download and extract:
+
+```text
+releases/exe/MonthlySalesPlanCompareExe.zip
+```
+
+Then run:
+
+```text
+START_EXE.bat
+```
 
 GitHub Pages cannot run this app because it needs a Python backend for Excel processing.
 
