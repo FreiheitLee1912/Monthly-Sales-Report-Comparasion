@@ -68,10 +68,11 @@ http://localhost:5000/
 3. Render can use `render.yaml` automatically.
 4. If entering settings manually:
    - Build command: `pip install -r requirements.txt`
-   - Start command: `gunicorn --timeout 180 app:app`
+   - Start command: `gunicorn --workers 1 --threads 1 --timeout 900 app:app`
    - Python version: `3.14.3`
 
 The online app loads the original `compare_core` bytecode extracted from the packaged executable, so Python 3.14 is required.
+The longer Gunicorn timeout is needed because large Excel files can take several minutes while openpyxl reads worksheet data on Render Free.
 
 ## EXE Download
 
