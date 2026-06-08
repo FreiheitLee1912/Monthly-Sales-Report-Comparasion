@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ result.title }}</title>
+  <style>
+    body { margin:0; min-height:100vh; background:#f7f8f9; color:#172b4d; font-family:Segoe UI, Arial, sans-serif; }
+    main { width:min(760px, calc(100vw - 32px)); margin:40px auto; background:white; border:1px solid #dcdfe4; border-radius:8px; padding:24px; }
+    h1 { margin-top:0; }
+    .links { display:flex; flex-wrap:wrap; gap:12px; margin:20px 0; }
+    a.button { background:#0c66e4; color:white; text-decoration:none; padding:10px 14px; border-radius:6px; font-weight:700; }
+    a { color:#0c66e4; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>{{ result.title }}</h1>
+    <p>Your report is ready.</p>
+    <div class="links">
+      <a class="button" href="/download/{{ result.job_id }}/report.xlsx">Download report.xlsx</a>
+      <a class="button" href="/download/{{ result.job_id }}/report.html">Download report.html</a>
+      <a class="button" href="/download/{{ result.job_id }}/report.pdf">Download report.pdf</a>
+    </div>
+    <a href="/">Generate another report</a>
+  </main>
+</body>
+</html>

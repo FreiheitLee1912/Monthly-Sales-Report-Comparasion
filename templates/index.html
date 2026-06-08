@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Excel Report Generator</title>
+  <style>
+    :root { --ink:#172b4d; --text:#44546f; --line:#dcdfe4; --accent:#0c66e4; --bg:#f7f8f9; --panel:#fff; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; background:var(--bg); color:var(--ink); font-family:Segoe UI, Arial, sans-serif; }
+    main { width:min(920px, calc(100vw - 32px)); margin:32px auto; }
+    header { margin-bottom:24px; }
+    h1 { margin:0 0 8px; font-size:30px; }
+    p { color:var(--text); line-height:1.6; }
+    form { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:24px; display:grid; gap:18px; }
+    label { display:grid; gap:8px; font-weight:700; }
+    select, input[type=file] { border:1px solid var(--line); border-radius:6px; padding:10px; background:#fff; color:var(--ink); }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .notice { border:1px solid #ffd666; background:#fff7d6; color:#533f04; padding:12px; border-radius:6px; }
+    .error { border:1px solid #f5b5b1; background:#ffeceb; color:#7f1d1d; padding:12px; border-radius:6px; }
+    button { justify-self:start; border:0; border-radius:6px; background:var(--accent); color:#fff; padding:11px 18px; font-weight:700; cursor:pointer; }
+    @media (max-width: 720px) { .grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Excel Report Generator</h1>
+      <p>Upload Excel files, choose a report type, then download XLSX, HTML, and PDF outputs.</p>
+    </header>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <form action="/report" method="post" enctype="multipart/form-data">
+      <label>
+        Report type
+        <select name="report_type">
+          <option value="summary">Excel Summary</option>
+          <option value="compare">Monthly Compare</option>
+          <option value="student_gantt">Student Gantt</option>
+        </select>
+      </label>
+      <label>
+        Excel file for Summary or Student Gantt
+        <input type="file" name="excel_file" accept=".xlsx,.xls">
+      </label>
+      <div class="grid">
+        <label>
+          Previous month file for Monthly Compare
+          <input type="file" name="old_file" accept=".xlsx,.xls">
+        </label>
+        <label>
+          Current month file for Monthly Compare
+          <input type="file" name="new_file" accept=".xlsx,.xls">
+        </label>
+      </div>
+      <div class="notice">Student Gantt supports columns such as Student/Task/Start/End/Progress, 學生/任務/開始日/結束日/進度, or Japanese equivalents.</div>
+      <button type="submit">Generate report</button>
+    </form>
+  </main>
+</body>
+</html>
