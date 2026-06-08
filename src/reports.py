@@ -14,7 +14,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 from reportlab.lib import colors
 from src.legacy_compare import compare_sheets as legacy_compare_sheets
-from src.workbook_sanitize import sanitize_workbook_for_openpyxl
+from src.workbook_sanitize import compact_workbook_for_legacy_compare, sanitize_workbook_for_openpyxl
 
 
 @dataclass(frozen=True)
@@ -82,9 +82,12 @@ def generate_excel_summary_report(source: Path, output_root: Path) -> ReportResu
 def generate_monthly_compare_report(old_file: Path, new_file: Path, output_root: Path) -> ReportResult:
     job_dir = _make_job_dir(output_root)
     sanitized_dir = job_dir / "sanitized_uploads"
+    compacted_dir = job_dir / "compacted_uploads"
     sanitized_old = sanitize_workbook_for_openpyxl(old_file, sanitized_dir / "old")
     sanitized_new = sanitize_workbook_for_openpyxl(new_file, sanitized_dir / "new")
-    legacy_result = legacy_compare_sheets(sanitized_old, sanitized_new, job_dir)
+    compacted_old = compact_workbook_for_legacy_compare(sanitized_old, compacted_dir / "old")
+    compacted_new = compact_workbook_for_legacy_compare(sanitized_new, compacted_dir / "new")
+    legacy_result = legacy_compare_sheets(compacted_old, compacted_new, job_dir)
     xlsx_path = Path(legacy_result["output_path"])
     download_xlsx_path = job_dir / "report.xlsx"
     if xlsx_path != download_xlsx_path:
